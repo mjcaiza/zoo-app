@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
+
 import './App.css';
+import { Redirect, BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import { createStore, combineReducers, applyMiddleware,compose  } from "redux"
+import { Provider } from "react-redux"
+import thunk from "redux-thunk"
+import animals from './app/data/redux/animal/Animal.reducers'
+import ListAnimal from "./app/presentation/view/animal/ListAnimal/ListAnimal";
+import EditAnimal from './app/presentation/view/animal/EditAnimal/EditAnimal';
+import CreateAnimal from './app/presentation/view/animal/CreateAnimal/CreateAnimal';
+
+const reducers = combineReducers({ animals })
+const store = createStore(reducers, compose(applyMiddleware(thunk)))
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="section-padding-50">
+      <div className="container">
+        <Provider store={store}>
+          <Router>
+            <Switch>
+              <Route exact path="/edit-animal" component={EditAnimal} />
+              <Route exact path="/create-animal" component={CreateAnimal} />
+              <Route exact path="/" component={ListAnimal} />
+              <Redirect from="*" to="/" />
+            </Switch>
+          </Router>
+        </Provider>
+      </div>
     </div>
   );
 }
