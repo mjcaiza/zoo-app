@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { BsPencil } from 'react-icons/bs'
-import { AiOutlineDelete } from "react-icons/ai";
+import { BiTrashAlt } from "react-icons/bi";
 
 /**
  * @description a dynamic table is created
@@ -54,7 +54,7 @@ export const Table = ({ titles, data, editOption, deleteOption }) => {
                                 <td key={'options'}>
                                     <BsPencil className="optionsIcon" color='black' size={25} onClick= {()=>editOption(item)}  ></BsPencil>
                                         &nbsp;&nbsp;&nbsp;
-                                    <AiOutlineDelete className="optionsIcon" color='black' size={25} onClick= {()=>deleteOption(item)} ></AiOutlineDelete>
+                                    <BiTrashAlt className="optionsIcon" color='black' size={25} onClick= {()=>deleteOption(item)} ></BiTrashAlt>
                                 </td>
                             })}
                         </tr>

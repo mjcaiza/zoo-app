@@ -45,4 +45,24 @@ export class AnimalRepositoryImplementation implements AnimalRepository {
 
         return new Animal(animal.id, animal.name, animal.age, animal.category, animal.environment)
     }
+
+    async FindAnimals(value : string) : Promise<Animal[]>{
+
+        const storage = localStorage.getItem('animals') 
+        const animals = storage ? JSON.parse(storage!) : []
+        let copyAnimals: Animal[] = []
+        animals.forEach((animal: any) => {
+            if(animal.name && animal.name.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().includes(value)){
+                copyAnimals.push(animal)
+            }else if(animal.age && animal.age.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().includes(value)){
+                copyAnimals.push(animal)
+            }else if(animal.category && animal.category.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().includes(value)){
+                copyAnimals.push(animal)
+            }else if(animal.environment && animal.environment.toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase().includes(value)){
+                copyAnimals.push(animal)
+            }
+        })
+       
+        return copyAnimals.map((animal: Animal) => new Animal(animal.id, animal.name, animal.age, animal.category, animal.environment))
+    }
 }

@@ -10,6 +10,8 @@ export interface AnimalRepository{
     EditAnimal(animal : Animal) : Promise<any>
 
     FindAnimal(id : string) : Promise<Animal>
+
+    FindAnimals(value : string) : Promise<Animal[]>
 }
 
 

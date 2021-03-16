@@ -1,55 +1,51 @@
-import { useEffect } from "react"
-import { connect, useDispatch } from "react-redux"
-import { Link } from "react-router-dom"
-import { titlesHeaders } from "../../../../../environments/constants"
-import { refreshList } from "../../../../data/redux/animal/Animal.actions"
-import { AnimalProps } from "../../../../data/redux/animal/Animal.types"
-import { Button } from "../../../UI/Button/Button"
+import { useEffect, useState } from "react"
+import { animalService, titlesHeaders } from "../../../../../environments/constants"
 import { Container } from "../../../UI/Container/Container"
 import { Row } from "../../../UI/Row/Row"
 import { Table } from "../../../UI/Table/Table"
 import { useHistory } from "react-router-dom";
-import { AnimalRepositoryImplementation } from "../../../../data/services/animal/AnimalApi"
-import { AnimalServiceImplementation } from "../../../../domain/interactors/animal/GetAnimalsUseCase"
+import { Animal } from "../../../../domain/entity/animal/Animal"
+import { Input } from "../../../UI/Input/Input"
+import { Button } from "../../../UI/Button/Button"
 
-interface RootState {
-    animals: any
-}
-
-
-const animalRepository = new AnimalRepositoryImplementation()
-const animalService = new AnimalServiceImplementation(animalRepository)
-
-const ListAnimal = ({ animals }: AnimalProps) => {
-
-    console.log(animals)
-
-    const dispatch = useDispatch()
+const ListAnimal = () => {
+    
+    let animals : Animal[] = [] 
+    const [animalsState, setAnimals] = useState(animals)
     let history = useHistory();
 
-    useEffect(() => { dispatch(refreshList) }, [dispatch])
+    useEffect(() => { animalService.GetAnimals().then(response => setAnimals(response)) }, [])
 
     const deleteAnimal = (animal :any) =>{
         animalService.DeleteAnimal(animal.id).then(response=>{
-            dispatch(refreshList) 
+            animalService.GetAnimals().then(response => setAnimals(response))
         })
     }
 
     const edit = (animal :any) => history.push(`/edit-animal?id=${animal.id}`)
 
+    const findAnimals = ( value : any ) => {
+        animalService.FindAnimals(value)
+            .then(response => setAnimals(response))
+    }
+
+    const goPath = (path : string)=> history.push(`${path}`)
+
     return (
         <Container>
             <Row>
                 <h1 style={{ marginRight: '450px' }}>Animals</h1>
-                <Link to="/create-animal" >
-                    <Button>Register</Button>
-                </Link>
+                <Button typeButton = 'primary' tittle = 'Register' onClick={()=>goPath('/create-animal')}></Button> 
             </Row>
+            <Row>
+                <Input placeholder="Search" onChange={(e)=>findAnimals(e.target.value)}></Input>
+            </Row>
+            <br></br>
             <Row>
                 <Table 
                     key="table-animals" 
                     titles={titlesHeaders} 
-                    data={animals} 
+                    data={animalsState} 
                     deleteOption = {deleteAnimal}
                     editOption = {edit}
                     ></Table>
@@ -57,10 +53,5 @@ const ListAnimal = ({ animals }: AnimalProps) => {
         </Container>
     )
 }
-const mapStateToProps = (state: RootState) => {
-    return {
-        animals: state.animals.animals,
-    }
-}
 
-export default connect(mapStateToProps)(ListAnimal)
+export default ListAnimal

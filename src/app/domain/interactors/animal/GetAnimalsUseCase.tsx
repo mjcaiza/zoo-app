@@ -7,6 +7,7 @@ export interface AnimalService {
     EditAnimal(animal : Animal) : Promise<any>
     FindAnimal(id : string) : Promise<Animal>
     DeleteAnimal(id : any) : Promise<Animal>
+    FindAnimals(value : string) : Promise<Animal[]>
 }
 
 export class AnimalServiceImplementation implements AnimalService {
@@ -35,5 +36,9 @@ export class AnimalServiceImplementation implements AnimalService {
 
     async DeleteAnimal(id : any) : Promise<Animal>{
         return this.animalRepository?.DeleteAnimal(id)
+    }
+
+    async FindAnimals(value : string) : Promise<Animal[]>{
+        return this.animalRepository?.FindAnimals(value)
     }
 }
